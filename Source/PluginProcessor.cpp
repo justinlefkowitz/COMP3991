@@ -224,6 +224,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout MIDISynthAudioProcessor::cre
     params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", juce::NormalisableRange<float> {0.0f, 1.0f}, 1.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> {0.0f, 3.0f}, 0.1f));
 
-    return { params.begin(), params.end() };
+    return { params.begin(), params.end() };    
 
 }
