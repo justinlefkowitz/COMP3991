@@ -12,16 +12,23 @@
 //==============================================================================
 MIDISynthAudioProcessor::MIDISynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", juce::AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+    ), apvts(*this, nullptr, "Parameters", createParams())
 #endif
 {
+
+    synth.addSound(new SynthSound());
+
+    for (int i = 0; i < 4; i++) {
+        synth.addVoice(new SynthVoice());
+    }
+
 }
 
 MIDISynthAudioProcessor::~MIDISynthAudioProcessor()
@@ -91,9 +98,15 @@ void MIDISynthAudioProcessor::changeProgramName (int index, const juce::String& 
 }
 
 //==============================================================================
-void MIDISynthAudioProcessor::prepareToPlay (double sampleRate, int)
+void MIDISynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    synth.prepareToPlay(sampleRate);
+    synth.setCurrentPlaybackSampleRate(sampleRate);
+
+    for (int i = 0; i < synth.getNumVoices(); i++) {
+        if (auto voice = dynamic_cast<SynthVoice*> (synth.getVoice(i))) {
+            voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+        }
+    }
 }
 
 void MIDISynthAudioProcessor::releaseResources()
@@ -131,11 +144,34 @@ bool MIDISynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void MIDISynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
+    auto totalNumInputChannels = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     buffer.clear();
 
-    synth.processBlock(buffer, midiMessages);
+    for (int i = 0; i < synth.getNumVoices(); i++) {
+        if (auto voice = dynamic_cast<SynthVoice*> (synth.getVoice(i))) {
 
+            //osc controls
+            //adsr
+
+            auto& attack = *apvts.getRawParameterValue("ATTACK");
+            auto& decay = *apvts.getRawParameterValue("DECAY");
+            auto& sustain = *apvts.getRawParameterValue("SUSTAIN");
+            auto& release = *apvts.getRawParameterValue("RELEASE");
+            auto& wave = *apvts.getRawParameterValue("OSC");
+
+
+            voice->updateADSR(attack, decay, sustain, release);
+            voice->updateWave(wave);
+            //LFO
+
+        }
+    }
+
+    
+
+    synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 
 
 }
@@ -170,4 +206,24 @@ void MIDISynthAudioProcessor::setStateInformation (const void* data, int sizeInB
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new MIDISynthAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout MIDISynthAudioProcessor::createParams() {
+
+    //gain parameters
+
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+
+
+    //Combobox for oscillators
+    params.push_back (std::make_unique<juce::AudioParameterChoice> ("OSC", "Oscillator", juce::StringArray {"Sine", "Saw", "Square"}, 0));
+
+    //ADSR
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", juce::NormalisableRange<float> {0.0f, 1.0f}, 0.1f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", juce::NormalisableRange<float> {0.0f, 1.0f}, 0.1f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", juce::NormalisableRange<float> {0.0f, 1.0f}, 1.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> {0.0f, 3.0f}, 0.1f));
+
+    return { params.begin(), params.end() };
+
 }

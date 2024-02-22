@@ -1,5 +1,17 @@
 #include "Synth.h"
 
+std::vector<float> Synth::generateNullWaveTable() {
+
+	constexpr auto WAVETABLE_LENGTH = 64;
+
+	std::vector<float> nullWaveTable(WAVETABLE_LENGTH);
+
+	for (auto i = 0; i < WAVETABLE_LENGTH; i++) {
+		nullWaveTable[i] = 0;
+	}
+
+	return nullWaveTable;
+}
 
 std::vector<float> Synth::generateSineWaveTable() {
 	
@@ -9,18 +21,66 @@ std::vector<float> Synth::generateSineWaveTable() {
 
 	const auto PI = std::atanf(1.f) * 4;
 
-	for (auto i = 1; i < WAVETABLE_LENGTH; i++) {
+	for (auto i = 0; i < WAVETABLE_LENGTH; i++) {
 		sineWaveTable[i] = std::sinf(2 * PI * static_cast<float>(i) / static_cast<float>(WAVETABLE_LENGTH));
 	}
 
 	return sineWaveTable;
 }
 
+std::vector<float> Synth::generateSquareWaveTable() {
+
+	constexpr auto WAVETABLE_LENGTH = 64;
+
+	std::vector<float> squareWaveTable(WAVETABLE_LENGTH);
+
+	for (auto i = 0; i < WAVETABLE_LENGTH; i++) {
+		squareWaveTable[i] = 2 * static_cast<int>(i / (WAVETABLE_LENGTH/2)) - 1;
+	}
+
+	return squareWaveTable;
+
+}
+
+std::vector<float> Synth::generateSawWaveTable() {
+
+	constexpr auto WAVETABLE_LENGTH = 64;
+
+	std::vector<float> sawWaveTable(WAVETABLE_LENGTH);
+
+	for (auto i = 0; i < WAVETABLE_LENGTH; i++) {
+		sawWaveTable[i] = 2 * (static_cast<float>(i) / static_cast<float>(WAVETABLE_LENGTH)) - 1;
+	}
+
+	return sawWaveTable;
+
+
+
+}
+
+std::vector<float> Synth::waveGenerate() {
+	constexpr auto WAVETABLE_LENGTH = 64;
+
+	std::vector<float> returnWave(WAVETABLE_LENGTH);
+
+
+
+	for (int i = 0; i < WAVETABLE_LENGTH; i++) {
+		returnWave[i] = (waveTables[0][i] + waveTables[1][i]) / 2;
+	}
+
+
+	return returnWave;
+}
+
+
+
+
 void Synth::initializeOscillators() {
 
 	constexpr auto OSCIALLTORS_COUNT = 128;
 
-	const auto waveTable = generateSineWaveTable();
+	std::vector<float> waveTable = waveGenerate();
 
 	oscillators.clear();
 	for (auto i = 0; i < OSCIALLTORS_COUNT; i++) {
@@ -29,15 +89,47 @@ void Synth::initializeOscillators() {
 
 }
 
+void Synth::setTable(int osc, int wave) {
 
-void Synth::prepareToPlay(double sampleRate) {
+	constexpr auto OSCIALLTORS_COUNT = 128;
+	waveSelect[osc] = wave;
 
-	this->sampleRate = sampleRate;
+
+	if (wave == 0) {
+		waveTables[0] = generateNullWaveTable();
+	} 
+	else if (wave == 1) {
+		waveTables[osc] = generateSineWaveTable();
+	}
+	else if (wave == 2) {
+		waveTables[osc] = generateSawWaveTable();
+	}
+	else if (wave == 3) {
+		waveTables[osc] = generateSquareWaveTable();
+	}
 
 	initializeOscillators();
 
 }
 
+
+
+
+int Synth::getOscillatorWave(int osc) {
+	return waveSelect[osc];
+}
+
+void Synth::prepareToPlay(double sampleRate) {
+
+	this->sampleRate = sampleRate;
+
+	waveTables[0] = generateNullWaveTable();
+	waveTables[1] = generateNullWaveTable();
+	waveTables[2] = generateNullWaveTable();
+
+	initializeOscillators();
+
+}
 
 void Synth::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) {
 
