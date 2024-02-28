@@ -17,7 +17,7 @@ bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
 
 void SynthVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
 {
-    osc.setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+    osc.setWaveFrequency(midiNoteNumber);
     adsr.noteOn();
 }
 
@@ -46,7 +46,7 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numOu
     spec.sampleRate = sampleRate;
     spec.numChannels = numOutputChannels;
 
-    osc.prepare(spec);
+    osc.prepareToPlay(spec);
     gain.prepare(spec);
 
     gain.setGainLinear(0.2f);
@@ -71,7 +71,7 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int sta
     synthBuffer.clear();
 
     juce::dsp::AudioBlock<float> audioBlock{ synthBuffer };
-    osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    osc.getNextAudioBlock(audioBlock);
     gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
 
     adsr.applyEnvelopeToBuffer(synthBuffer, 0, synthBuffer.getNumSamples());
@@ -96,30 +96,7 @@ void SynthVoice::updateADSR(const float attack, const float decay, const float s
     adsr.setParameters(adsrParameters);
 }
 
-void SynthVoice::updateWave(int wave) {
 
-    switch (wave) {
-
-        //sine
-    case (0):
-        osc.initialise([](float x) {return std::sin(x); });
-
-        //saw
-    case (1):
-        osc.initialise([](float x) {return x / juce::MathConstants<float>::pi; });
-
-        //square
-    case (2):
-        osc.initialise([](float x) {return x < 0.0f ? -1.0f : 1.0f; });
-
-    
-    default:
-        jassertfalse;
-        break;
-    }
-
-
-}
 
 
 

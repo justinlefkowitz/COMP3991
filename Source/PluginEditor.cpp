@@ -11,12 +11,13 @@
 
 //==============================================================================
 MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC")
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
 
     setSize (400, 300);
+    addAndMakeVisible(osc);
     setResizable(true, true);
 
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
@@ -25,15 +26,15 @@ MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProc
     decAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "DECAY", decSelect);
     susAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "SUSTAIN", susSelect);
     relAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "RELEASE", relSelect);
-    oscAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "OSC", oscSelect);
+   
 
     setSlider(attSelect);
     setSlider(decSelect);
     setSlider(susSelect);
     setSlider(relSelect);
 
-    oscSelect.addItemList(audioProcessor.apvts.getParameter("OSC")->getAllValueStrings(), 1);
-    addAndMakeVisible(oscSelect);
+    
+
 
 
 }
@@ -58,6 +59,8 @@ void MIDISynthAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
+    osc.setBounds(10, 10, 100, 30);
+
     const auto bounds = getLocalBounds().reduced(10);
     const auto padding = 10;
 
@@ -71,7 +74,6 @@ void MIDISynthAudioProcessorEditor::resized()
     susSelect.setBounds(decSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
     relSelect.setBounds(susSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
 
-    oscSelect.setBounds(10, 10, 100, 50);
 
     
 }

@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "OscComponent.h"
+
 
 //==============================================================================
 /**
@@ -29,8 +31,8 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     MIDISynthAudioProcessor& audioProcessor;
+    OscComponent osc;
 
-    juce::ComboBox oscSelect;
     juce::Slider attSelect;
     juce::Slider susSelect;
     juce::Slider decSelect;
@@ -38,7 +40,6 @@ private:
     
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscAttachment;
     std::unique_ptr<SliderAttachment> attAttachment;
     std::unique_ptr<SliderAttachment> susAttachment;
     std::unique_ptr<SliderAttachment> decAttachment;

@@ -24,11 +24,11 @@ MIDISynthAudioProcessor::MIDISynthAudioProcessor()
 {
 
     synth.addSound(new SynthSound());
-
+    
     for (int i = 0; i < 4; i++) {
         synth.addVoice(new SynthVoice());
     }
-
+    
 }
 
 MIDISynthAudioProcessor::~MIDISynthAudioProcessor()
@@ -163,7 +163,7 @@ void MIDISynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
 
             voice->updateADSR(attack, decay, sustain, release);
-            voice->updateWave(wave);
+            voice->getOsc().setWave(wave);
             //LFO
 
         }

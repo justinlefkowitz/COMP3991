@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "SynthSound.h"
+#include "OscData.h"
 
 class SynthVoice : public juce::SynthesiserVoice {
 
@@ -27,13 +28,13 @@ class SynthVoice : public juce::SynthesiserVoice {
      void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 
      void updateADSR(const float attack, const float sustain, const float decay, const float release);
-     void updateWave(int wave);
+     OscData& getOsc() { return osc; };
 
  private:
      juce::dsp::ProcessSpec spec;
      juce::AudioBuffer<float> synthBuffer;
 
-     juce::dsp::Oscillator<float> osc{ [](float x) {return x < 0.0f ? -1.0f : 1.0f; }, 200 };
+     OscData osc;
      juce::dsp::Gain<float> gain;
 
      juce::ADSR adsr;
