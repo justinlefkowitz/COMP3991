@@ -9,6 +9,7 @@
         <FILE id="jETahB" name="OscComponent.cpp" compile="1" resource="0"
               file="Source/OscComponent.cpp"/>
         <FILE id="mehRPG" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
+        <FILE id="iUHBSe" name="Oscilloscope.h" compile="0" resource="0" file="Source/Oscilloscope.h"/>
       </GROUP>
       <GROUP id="{CFB11001-962D-A01F-A185-C63BAFCB9C99}" name="Data">
         <FILE id="bQ9pLy" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>

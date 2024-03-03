@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "SynthVoice.h"
 #include "SynthSound.h"
+#include "Oscilloscope.h"
 
 //==============================================================================
 /**
@@ -54,6 +55,9 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    AudioBufferQueue<float>& getAudioBufferQueue() { return audioBufferQueue; }
+
+
 
     juce::AudioProcessorValueTreeState apvts;
 
@@ -63,6 +67,11 @@ private:
 
     juce::Synthesiser synth;
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();
+
+
+    AudioBufferQueue<float> audioBufferQueue;
+    ScopeDataCollector<float> scopeDataCollector{ audioBufferQueue };
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MIDISynthAudioProcessor)
 

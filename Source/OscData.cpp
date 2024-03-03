@@ -37,6 +37,11 @@ void OscData::setWave(const int i) {
         initialise([](float x) {return x < 0.0f ? -1.0f : 1.0f; });
         break;
 
+        //triangle 
+    case 3:
+        initialise([](float x) {return x < 0.0f ? (-2 * x / juce::MathConstants<float>::pi) - 1 : (2 * x / juce::MathConstants<float>::pi) - 1; });
+        break;
+
     default:
         jassertfalse;
         break;
@@ -45,7 +50,11 @@ void OscData::setWave(const int i) {
 }
 
 void OscData::setWaveFrequency(const int midiNoteNumber) {
-    setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+    setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber + transposeValue));
+}
+
+void OscData::setTransposeValue(const int i) {
+    transposeValue = i;
 }
 
 

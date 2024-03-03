@@ -29,12 +29,14 @@ class SynthVoice : public juce::SynthesiserVoice {
 
      void updateADSR(const float attack, const float sustain, const float decay, const float release);
      OscData& getOsc() { return osc; };
+     OscData& getOsc2() { return osc2; };
 
  private:
      juce::dsp::ProcessSpec spec;
      juce::AudioBuffer<float> synthBuffer;
 
      OscData osc;
+     OscData osc2;
      juce::dsp::Gain<float> gain;
 
      juce::ADSR adsr;

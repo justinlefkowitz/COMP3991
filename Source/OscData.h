@@ -19,11 +19,10 @@ public:
     void getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
     void setWave(const int i);
     void setWaveFrequency(const int midiNoteNumber);
-    
+    void setTransposeValue(const int i);
 
 
 private:
-
-
+    int transposeValue;
 
 };

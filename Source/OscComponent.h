@@ -18,14 +18,17 @@
 class OscComponent  : public juce::Component
 {
 public:
-    OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID);
+    OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID, juce::String transposeSelectorID);
     ~OscComponent() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
+
     juce::ComboBox oscWaveSelector;
+    juce::Slider oscTranspose;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> oscTransposeAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscWaveSelectorAttachment;
 
 
