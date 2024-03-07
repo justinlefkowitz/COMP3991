@@ -18,7 +18,7 @@
 class OscComponent  : public juce::Component
 {
 public:
-    OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID, juce::String transposeSelectorID);
+    OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID, juce::String transposeSelectorID, juce::String detuneSelectorID);
     ~OscComponent() override;
 
     void paint (juce::Graphics&) override;
@@ -28,8 +28,12 @@ private:
 
     juce::ComboBox oscWaveSelector;
     juce::Slider oscTranspose;
+    juce::Slider oscDetune;
+
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> oscTransposeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> oscDetuneAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> oscWaveSelectorAttachment;
+
 
 
 

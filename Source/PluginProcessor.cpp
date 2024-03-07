@@ -159,15 +159,26 @@ void MIDISynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             auto& decay = *apvts.getRawParameterValue("DECAY");
             auto& sustain = *apvts.getRawParameterValue("SUSTAIN");
             auto& release = *apvts.getRawParameterValue("RELEASE");
+
+
             auto& wave = *apvts.getRawParameterValue("OSC");
             auto& wave2 = *apvts.getRawParameterValue("OSC2");
+            
+            auto& detune = *apvts.getRawParameterValue("OSCDET");
+            auto& detune2 = *apvts.getRawParameterValue("OSCDET2");
+
             auto& transpose = *apvts.getRawParameterValue("OSCTRANS");
             auto& transpose2 = *apvts.getRawParameterValue("OSCTRANS2");
 
 
-            voice->updateADSR(attack, decay, sustain, release);
+            voice->getFilter().setADSR(attack, decay, sustain, release);
+
             voice->getOsc().setWave(wave);
             voice->getOsc2().setWave(wave2);
+
+            voice->getOsc().setDetuneValue(detune);
+            voice->getOsc2().setDetuneValue(detune2);
+
             voice->getOsc().setTransposeValue(transpose);
             voice->getOsc2().setTransposeValue(transpose2);
             //LFO
@@ -225,11 +236,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout MIDISynthAudioProcessor::cre
     //Combobox for oscillators
     params.push_back(std::make_unique<juce::AudioParameterChoice> ("OSC", "Oscillator", juce::StringArray {"Sine", "Saw", "Square", "Triangle"}, 0));
     params.push_back(std::make_unique<juce::AudioParameterInt>("OSCTRANS", "Transpose", -12, 12, 0, juce::AudioParameterIntAttributes{}));
+    params.push_back(std::make_unique<juce::AudioParameterInt>("OSCDET", "Detune", -100, 100, 0, juce::AudioParameterIntAttributes{}));
+
 
 
 
     params.push_back(std::make_unique<juce::AudioParameterChoice> ("OSC2", "Oscillator", juce::StringArray{ "Sine", "Saw", "Square", "Triangle"}, 0));
     params.push_back(std::make_unique<juce::AudioParameterInt>("OSCTRANS2", "Transpose", -12, 12, 0, juce::AudioParameterIntAttributes{}));
+    params.push_back(std::make_unique<juce::AudioParameterInt>("OSCDET2", "Detune", -100, 100, 0, juce::AudioParameterIntAttributes{}));
 
     //ADSR
     params.push_back(std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", juce::NormalisableRange<float> {0.0f, 1.0f}, 0.1f));

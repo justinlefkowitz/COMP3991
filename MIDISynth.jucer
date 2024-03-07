@@ -6,12 +6,18 @@
   <MAINGROUP id="Vth1vP" name="MIDISynth">
     <GROUP id="{335FD2BD-7510-E4C8-D11F-B22A4CCB047B}" name="Source">
       <GROUP id="{D4ADA856-25C8-368B-DDE1-C5C0AA4029AB}" name="UI">
+        <FILE id="z75sev" name="FilterComponent.cpp" compile="1" resource="0"
+              file="Source/FilterComponent.cpp"/>
+        <FILE id="X3uTBL" name="FilterComponent.h" compile="0" resource="0"
+              file="Source/FilterComponent.h"/>
         <FILE id="jETahB" name="OscComponent.cpp" compile="1" resource="0"
               file="Source/OscComponent.cpp"/>
         <FILE id="mehRPG" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
         <FILE id="iUHBSe" name="Oscilloscope.h" compile="0" resource="0" file="Source/Oscilloscope.h"/>
       </GROUP>
       <GROUP id="{CFB11001-962D-A01F-A185-C63BAFCB9C99}" name="Data">
+        <FILE id="G6LPg4" name="FilterData.cpp" compile="1" resource="0" file="Source/FilterData.cpp"/>
+        <FILE id="wU8p3L" name="FilterData.h" compile="0" resource="0" file="Source/FilterData.h"/>
         <FILE id="bQ9pLy" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>
         <FILE id="ExjE9N" name="OscData.h" compile="0" resource="0" file="Source/OscData.h"/>
       </GROUP>

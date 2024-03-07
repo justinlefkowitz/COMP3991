@@ -11,7 +11,8 @@
 
 //==============================================================================
 MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC", "OSCTRANS"), osc2(audioProcessor.apvts, "OSC2", "OSCTRANS2"), oscScope(p.getAudioBufferQueue())
+    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC", "OSCTRANS", "OSCDET"), osc2(audioProcessor.apvts, "OSC2", "OSCTRANS2", "OSCDET2"), oscScope(p.getAudioBufferQueue()),
+        filter (audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE")
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -20,20 +21,11 @@ MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProc
     addAndMakeVisible(osc);
     addAndMakeVisible(osc2);
     addAndMakeVisible(oscScope);
+    addAndMakeVisible(filter);
+
     setResizable(true, true);
 
-    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-
-    attAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "ATTACK", attSelect);
-    decAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "DECAY", decSelect);
-    susAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "SUSTAIN", susSelect);
-    relAttachment = std::make_unique<SliderAttachment>(audioProcessor.apvts, "RELEASE", relSelect);
-   
-
-    setSlider(attSelect);
-    setSlider(decSelect);
-    setSlider(susSelect);
-    setSlider(relSelect);
+    
 
     
 
@@ -64,29 +56,13 @@ void MIDISynthAudioProcessorEditor::resized()
     osc.setBounds(10, 10, 400, 200);
     osc2.setBounds(510, 10, 400, 200);
     oscScope.setBounds(10, 300, oscScope.getBounds().getWidth(), oscScope.getBounds().getHeight());
+    filter.setBounds(1000, 10, 400, 200);
 
     const auto bounds = getLocalBounds().reduced(10);
     const auto padding = 10;
 
-    /*
-    const auto sliderWidth = bounds.getWidth() / 4 - padding;
-    const auto sliderHeight = bounds.getHeight() - padding;
-    const auto sliderStartX = 0;
-    const auto sliderStartY = bounds.getHeight() / 2 - (sliderHeight / 2);
 
-    attSelect.setBounds(sliderStartX, sliderStartY, sliderWidth, sliderHeight);
-    decSelect.setBounds(attSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
-    susSelect.setBounds(decSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
-    relSelect.setBounds(susSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
-
-    */
     
 }
 
 
-void MIDISynthAudioProcessorEditor::setSlider(juce::Slider& slider) {
-    slider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
-    addAndMakeVisible(slider);
-
-}

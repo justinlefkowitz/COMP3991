@@ -135,7 +135,7 @@ private:
             setSize(800,300);
             //scopeImage = juce::ImageCache::getFromMemory(juce::Images::newProject9_png, juce::Images::newProject9_pngSize);
             sampleData.fill (SampleType (0));
-            setFramesPerSecond (30);
+            setFramesPerSecond (60);
         }
         
         //==============================================================================

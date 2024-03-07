@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "OscComponent.h"
+#include "FilterComponent.h"
 #include "Oscilloscope.h"
 
 
@@ -35,19 +36,8 @@ private:
     OscComponent osc;
     OscComponent osc2;
 
-    juce::Slider attSelect;
-    juce::Slider susSelect;
-    juce::Slider decSelect;
-    juce::Slider relSelect;
+    FilterComponent filter;
     
-    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-
-    std::unique_ptr<SliderAttachment> attAttachment;
-    std::unique_ptr<SliderAttachment> susAttachment;
-    std::unique_ptr<SliderAttachment> decAttachment;
-    std::unique_ptr<SliderAttachment> relAttachment;
-
-    void setSlider(juce::Slider& slider);
 
     ScopeComponent<float> oscScope;
     AudioBufferQueue<float> audioBufferQueue;

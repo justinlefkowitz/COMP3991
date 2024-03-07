@@ -50,11 +50,17 @@ void OscData::setWave(const int i) {
 }
 
 void OscData::setWaveFrequency(const int midiNoteNumber) {
-    setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber + transposeValue));
+    setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber + transposeValue) + 
+        detuneValue * (juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber + transposeValue + 1) - juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber + transposeValue)) / 100);
 }
+
 
 void OscData::setTransposeValue(const int i) {
     transposeValue = i;
+}
+
+void OscData::setDetuneValue(const int i) {
+    detuneValue = i;
 }
 
 

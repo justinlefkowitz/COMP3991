@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    OscData.h
-    Created: 28 Feb 2024 12:55:40pm
+    FilterData.h
+    Created: 6 Mar 2024 5:15:28pm
     Author:  jmast
 
   ==============================================================================
@@ -11,20 +11,16 @@
 #pragma once
 #include <JuceHeader.h>
 
-
-class OscData : public juce::dsp::Oscillator<float> {
+class FilterData : public juce::ADSR {
 
 public:
     void prepareToPlay(juce::dsp::ProcessSpec& spec);
     void getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
-    void setWave(const int i);
-    void setWaveFrequency(const int midiNoteNumber);
-    void setTransposeValue(const int i);
-    void setDetuneValue(const int i);
-
+    void setADSR(float a, float d, float s, float r);
 
 private:
-    int transposeValue;
-    int detuneValue;
+    juce::ADSR::Parameters params;
+
+
 
 };

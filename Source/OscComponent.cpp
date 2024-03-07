@@ -12,7 +12,7 @@
 #include "OscComponent.h"
 
 //==============================================================================
-OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID, juce::String transposeSelectorID)
+OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID, juce::String transposeSelectorID, juce::String detuneSelectorID)
 {
 
     oscWaveSelector.addItemList(apvts.getParameter(waveSelectorID)->getAllValueStrings(), 1);
@@ -25,8 +25,14 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
     oscTranspose.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     addAndMakeVisible(oscTranspose);
 
+    oscDetune.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    addAndMakeVisible(oscDetune);
+
+
+
 
     oscTransposeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, transposeSelectorID, oscTranspose);
+    oscDetuneAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, detuneSelectorID, oscDetune);
     oscWaveSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, waveSelectorID, oscWaveSelector);
 
 }
@@ -48,7 +54,8 @@ void OscComponent::resized()
     auto height = getHeight();
     auto width = getWidth();
 
-    oscWaveSelector.setBounds(padding, padding, width / 2, height / 5);
-    oscTranspose.setBounds(width / 2 + padding, padding, width / 2, height - 2 * padding);
+    oscWaveSelector.setBounds(padding, padding, width / 3, height / 5);
+    oscTranspose.setBounds(width / 3 + padding, padding, width / 3, height - 2 * padding);
+    oscDetune.setBounds(2 * width / 3, padding, width / 3, height - 2 * padding);
 
 }
