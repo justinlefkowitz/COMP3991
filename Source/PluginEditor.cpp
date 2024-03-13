@@ -11,7 +11,8 @@
 
 //==============================================================================
 MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC", "OSCTRANS", "OSCDET"), osc2(audioProcessor.apvts, "OSC2", "OSCTRANS2", "OSCDET2"), oscScope(p.getAudioBufferQueue()),
+    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC", "OSCTRANS", "OSCDET", "OSCPHASE"), 
+    osc2(audioProcessor.apvts, "OSC2", "OSCTRANS2", "OSCDET2", "OSCPHASE2"), oscScope(p.getAudioBufferQueue()),
         filter (audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE")
 {
     // Make sure that before the constructor has finished, you've set the

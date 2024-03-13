@@ -11,7 +11,14 @@
 #include "OscData.h"
 
 void OscData::prepareToPlay(juce::dsp::ProcessSpec& spec) {
+    s.maximumBlockSize = spec.maximumBlockSize;
+    s.numChannels = spec.numChannels;
+    s.sampleRate = spec.sampleRate;
     prepare(spec);
+}
+
+void OscData::prepareToPlay() {
+    prepare(s);
 }
 
 void OscData::getNextAudioBlock(juce::dsp::AudioBlock<float>& block) {
@@ -61,6 +68,12 @@ void OscData::setTransposeValue(const int i) {
 
 void OscData::setDetuneValue(const int i) {
     detuneValue = i;
+}
+
+void OscData::setPhase(const double i) {
+    setPhaseStart(i);
+    phaseValue = i;
+    
 }
 
 

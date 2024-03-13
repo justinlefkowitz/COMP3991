@@ -18,7 +18,10 @@ bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
 void SynthVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
 {
     osc.setWaveFrequency(midiNoteNumber);
+    osc.reset();
     osc2.setWaveFrequency(midiNoteNumber);
+    osc2.reset();
+
     adsr.noteOn();
 }
 
