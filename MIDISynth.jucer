@@ -5,6 +5,7 @@
               pluginFormats="buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn">
   <MAINGROUP id="Vth1vP" name="MIDISynth">
     <GROUP id="{335FD2BD-7510-E4C8-D11F-B22A4CCB047B}" name="Source">
+      <FILE id="VwawxV" name="MyOscillator.h" compile="0" resource="0" file="Source/MyOscillator.h"/>
       <GROUP id="{D4ADA856-25C8-368B-DDE1-C5C0AA4029AB}" name="UI">
         <FILE id="z75sev" name="FilterComponent.cpp" compile="1" resource="0"
               file="Source/FilterComponent.cpp"/>

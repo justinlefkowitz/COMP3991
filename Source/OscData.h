@@ -10,9 +10,10 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "Oscillator.h"
 
 
-class OscData : public juce::dsp::Oscillator<float> {
+class OscData : public juce::dsp::MyOscillator<float> {
 
 public:
     void prepareToPlay(juce::dsp::ProcessSpec& spec);
