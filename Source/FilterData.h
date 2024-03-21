@@ -11,7 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-class FilterData : public juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> {
+class FilterData : public juce::dsp::IIR::Filter<float> {
 
 public:
 

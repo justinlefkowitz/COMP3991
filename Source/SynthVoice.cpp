@@ -33,7 +33,7 @@ void SynthVoice::stopNote(float velocity, bool allowTailOff)
 {
     adsr.noteOff();
     
-    if (!allowTailOff || !adsr.isActive()) {
+    if (!allowTailOff  || !adsr.isActive()) {
         clearCurrentNote();
     }
 }
@@ -59,14 +59,19 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numOu
     gain.prepare(spec);
     gain2.prepare(spec);
 
-    filter.prepare(spec);
-    filter.sampleRate = sampleRate;
-    filter.reset();
+    filterL.prepare(spec);
+    filterL.sampleRate = sampleRate;
+    filterL.reset();
 
+    filterR.prepare(spec);
+    filterR.sampleRate = sampleRate;
+    filterR.reset();
     
 
     gain.setGainDecibels(osc.getGain());
     gain2.setGainDecibels(osc2.getGain());
+    //gain.setRampDurationSeconds(0.1);
+    gain2.setRampDurationSeconds(0.1);
 
     
 
@@ -83,6 +88,9 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int sta
     if (!isVoiceActive()) {
         return;
     }
+
+    juce::AudioBuffer<float> synthBuffer;
+    juce::AudioBuffer<float> synthBuffer2;
 
     synthBuffer.setSize(outputBuffer.getNumChannels(), numSamples, false, false, true);
     synthBuffer.clear();
@@ -105,7 +113,7 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int sta
     
     
 
-
+    
     for (int i = 0; i < outputBuffer.getNumChannels(); i++) {
         
 
@@ -119,12 +127,18 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int sta
             clearCurrentNote();
         }
     }
-
+    
     
 
-    if (filter.isOn) {
-        juce::dsp::AudioBlock<float> outputBlock{ outputBuffer };
-        filter.process(juce::dsp::ProcessContextReplacing<float>(outputBlock));
+    if (filterL.isOn) {
+        float* channelL = outputBuffer.getWritePointer(0);
+        float* channelR = outputBuffer.getWritePointer(1);
+        
+        for (int i = 0; i < numSamples; i++) {
+            channelL[i] = filterL.processSample(channelL[i]);
+            channelR[i] = filterR.processSample(channelR[i]);
+        }
+        
     }
 
     

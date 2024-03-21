@@ -32,13 +32,11 @@ class SynthVoice : public juce::SynthesiserVoice {
      OscData& getOsc() { return osc; };
      OscData& getOsc2() { return osc2; };
      AmpData& getAmp() { return adsr; };
-     FilterData& getFilter() { return filter; };
-
+     FilterData& getFilterL() { return filterL; };
+     FilterData& getFilterR() { return filterR; };
 
  private:
      juce::dsp::ProcessSpec spec;
-     juce::AudioBuffer<float> synthBuffer;
-     juce::AudioBuffer<float> synthBuffer2;
 
      OscData osc;
      OscData osc2;
@@ -48,7 +46,8 @@ class SynthVoice : public juce::SynthesiserVoice {
      AmpData adsr;
      juce::ADSR::Parameters adsrParameters;
 
-     FilterData filter;
+     FilterData filterL;
+     FilterData filterR;
      
      
 

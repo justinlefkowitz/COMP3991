@@ -199,8 +199,10 @@ void MIDISynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             voice->getOsc2().setGain(gain2);
 
             
-            voice->getFilter().setFilter(freq, res, type);
-            voice->getFilter().isOn = filterOn;
+            voice->getFilterL().setFilter(freq, res, type);
+            voice->getFilterL().isOn = filterOn;
+            voice->getFilterR().setFilter(freq, res, type);
+            voice->getFilterR().isOn = filterOn;
 
             //LFO
 

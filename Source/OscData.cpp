@@ -31,7 +31,7 @@ void OscData::setWave(const int i) {
 
         //saw
     case 1:
-        initialise([](float x) {return x / juce::MathConstants<float>::pi; });
+        initialise([](float x) {return -x / juce::MathConstants<float>::pi; });
         break;
 
         //square
