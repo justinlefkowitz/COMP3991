@@ -13,7 +13,7 @@
 
 //==============================================================================
 OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::String waveSelectorID, juce::String transposeSelectorID, juce::String detuneSelectorID, 
-    juce::String phaseSelectorID)
+    juce::String phaseSelectorID, juce::String gainSelectorID)
 {
 
     oscWaveSelector.addItemList(apvts.getParameter(waveSelectorID)->getAllValueStrings(), 1);
@@ -32,12 +32,16 @@ OscComponent::OscComponent(juce::AudioProcessorValueTreeState& apvts, juce::Stri
     oscPhase.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     addAndMakeVisible(oscPhase);
 
+    oscGain.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    addAndMakeVisible(oscGain);
+
 
 
     oscWaveSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, waveSelectorID, oscWaveSelector);
     oscTransposeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, transposeSelectorID, oscTranspose);
     oscDetuneAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, detuneSelectorID, oscDetune);
     oscPhaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, phaseSelectorID, oscPhase);
+    oscGainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, gainSelectorID, oscGain);
    
     
 
@@ -64,5 +68,6 @@ void OscComponent::resized()
     oscTranspose.setBounds(padding, padding + 2 *height / 5, width / 3, height / 5);
     oscDetune.setBounds(padding, padding + 3 * height / 5, width / 3, height / 5);
     oscPhase.setBounds(padding + width / 3, padding , width / 2,height - 2 * padding );
+    oscGain.setBounds(padding + 5 * width / 6, padding, width / 10, height - 2 * padding);
 
 }

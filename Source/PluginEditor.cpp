@@ -11,9 +11,9 @@
 
 //==============================================================================
 MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC", "OSCTRANS", "OSCDET", "OSCPHASE"), 
-    osc2(audioProcessor.apvts, "OSC2", "OSCTRANS2", "OSCDET2", "OSCPHASE2"), oscScope(p.getAudioBufferQueue()),
-        filter (audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE")
+    : AudioProcessorEditor (&p), audioProcessor (p), osc (audioProcessor.apvts, "OSC", "OSCTRANS", "OSCDET", "OSCPHASE", "OSCGAIN"),
+    osc2(audioProcessor.apvts, "OSC2", "OSCTRANS2", "OSCDET2", "OSCPHASE2", "OSCGAIN2"), oscScope(p.getAudioBufferQueue()),
+        amp (audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE"), filter (audioProcessor.apvts,"FILTERFREQ", "FILTERRES", "FILTERTYPE", "FILTERON")
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -22,6 +22,7 @@ MIDISynthAudioProcessorEditor::MIDISynthAudioProcessorEditor (MIDISynthAudioProc
     addAndMakeVisible(osc);
     addAndMakeVisible(osc2);
     addAndMakeVisible(oscScope);
+    addAndMakeVisible(amp);
     addAndMakeVisible(filter);
 
     setResizable(true, true);
@@ -57,7 +58,8 @@ void MIDISynthAudioProcessorEditor::resized()
     osc.setBounds(10, 10, 400, 200);
     osc2.setBounds(510, 10, 400, 200);
     oscScope.setBounds(10, 300, oscScope.getBounds().getWidth(), oscScope.getBounds().getHeight());
-    filter.setBounds(1000, 10, 400, 200);
+    amp.setBounds(1000, 10, 400, 200);
+    filter.setBounds(1000, 300, 400, 200);
 
     const auto bounds = getLocalBounds().reduced(10);
     const auto padding = 10;

@@ -2,7 +2,7 @@
   ==============================================================================
 
     FilterData.h
-    Created: 6 Mar 2024 5:15:28pm
+    Created: 20 Mar 2024 2:50:42pm
     Author:  jmast
 
   ==============================================================================
@@ -11,16 +11,19 @@
 #pragma once
 #include <JuceHeader.h>
 
-class FilterData : public juce::ADSR {
+class FilterData : public juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> {
 
 public:
-    void prepareToPlay(juce::dsp::ProcessSpec& spec);
-    void getNextAudioBlock(juce::dsp::AudioBlock<float>& block);
-    void setADSR(float a, float d, float s, float r);
+
+    void setFilter(float freq, float res, int type);
+
+    int sampleRate;
+    bool isOn;
 
 private:
-    juce::ADSR::Parameters params;
 
-
-
+    float frequency;
+    float resonance;
+    int filterType;
+    
 };

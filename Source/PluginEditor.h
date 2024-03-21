@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "OscComponent.h"
+#include "AmpComponent.h"
 #include "FilterComponent.h"
 #include "Oscilloscope.h"
 
@@ -33,8 +34,11 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     MIDISynthAudioProcessor& audioProcessor;
+
     OscComponent osc;
     OscComponent osc2;
+
+    AmpComponent amp;
 
     FilterComponent filter;
     

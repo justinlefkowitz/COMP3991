@@ -22,7 +22,11 @@ void SynthVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesiser
     osc2.setWaveFrequency(midiNoteNumber);
     osc2.reset();
 
+    gain.setGainDecibels(osc.getGain());
+    gain2.setGainDecibels(osc2.getGain());
+
     adsr.noteOn();
+    
 }
 
 void SynthVoice::stopNote(float velocity, bool allowTailOff)
@@ -53,10 +57,18 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numOu
     osc.prepareToPlay(spec);
     osc2.prepareToPlay(spec);
     gain.prepare(spec);
+    gain2.prepare(spec);
 
-    gain.setGainLinear(0.2f);
+    filter.prepare(spec);
+    filter.sampleRate = sampleRate;
+    filter.reset();
+
     
 
+    gain.setGainDecibels(osc.getGain());
+    gain2.setGainDecibels(osc2.getGain());
+
+    
 
     isPrepared = true;
 }
@@ -74,22 +86,49 @@ void SynthVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int sta
 
     synthBuffer.setSize(outputBuffer.getNumChannels(), numSamples, false, false, true);
     synthBuffer.clear();
+    synthBuffer2.setSize(outputBuffer.getNumChannels(), numSamples, false, false, true);
+    synthBuffer2.clear();
 
     juce::dsp::AudioBlock<float> audioBlock{ synthBuffer };
+    juce::dsp::AudioBlock<float> audioBlock2{ synthBuffer2 };
     osc.getNextAudioBlock(audioBlock);
-    osc2.getNextAudioBlock(audioBlock);
+    osc2.getNextAudioBlock(audioBlock2);
     gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    gain2.process(juce::dsp::ProcessContextReplacing<float>(audioBlock2));
+
+
+    
 
     adsr.applyEnvelopeToBuffer(synthBuffer, 0, synthBuffer.getNumSamples());
+    adsr.applyEnvelopeToBuffer(synthBuffer2, 0, synthBuffer2.getNumSamples());
+
+    
+    
 
 
     for (int i = 0; i < outputBuffer.getNumChannels(); i++) {
+        
+
+
         outputBuffer.addFrom(i, startSample, synthBuffer, i, 0, numSamples);
+        outputBuffer.addFrom(i, startSample, synthBuffer2, i, 0, numSamples);
+        
+
 
         if (!adsr.isActive()) {
             clearCurrentNote();
         }
     }
+
+    
+
+    if (filter.isOn) {
+        juce::dsp::AudioBlock<float> outputBlock{ outputBuffer };
+        filter.process(juce::dsp::ProcessContextReplacing<float>(outputBlock));
+    }
+
+    
+
 }
 
 

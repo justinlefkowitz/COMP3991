@@ -2,62 +2,51 @@
   ==============================================================================
 
     FilterComponent.cpp
-    Created: 6 Mar 2024 5:15:03pm
+    Created: 20 Mar 2024 2:50:33pm
     Author:  jmast
 
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "FilterComponent.h"
 
-//==============================================================================
-FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String attackID, juce::String decayID, juce::String sustainID, juce::String releaseID)
-{
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String freqID, juce::String resID, juce::String typeID, juce::String powerID) {
 
-    attAttachment = std::make_unique<SliderAttachment>(apvts, attackID, attSelect);
-    decAttachment = std::make_unique<SliderAttachment>(apvts, decayID, decSelect);
-    susAttachment = std::make_unique<SliderAttachment>(apvts, sustainID, susSelect);
-    relAttachment = std::make_unique<SliderAttachment>(apvts, releaseID, relSelect);
+    freqAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, freqID, freq);
+    resAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, resID, res);
+    typeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, typeID, type);
+    powerAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, powerID, power);
 
+    freq.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    freq.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
+    addAndMakeVisible(freq);
 
-    setSlider(attSelect);
-    setSlider(decSelect);
-    setSlider(susSelect);
-    setSlider(relSelect);
+    res.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    res.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
+    addAndMakeVisible(res);
 
+    type.addItemList(apvts.getParameter(typeID)->getAllValueStrings(), 1);
+    type.setSelectedId(1);
+    addAndMakeVisible(type);
 
+    addAndMakeVisible(power);
 
-}
-
-FilterComponent::~FilterComponent()
-{
-}
-
-void FilterComponent::paint (juce::Graphics& g)
-{
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
-
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
-    g.fillAll (juce::Colours::olivedrab);   // clear the background
-
-    g.setColour (juce::Colours::white);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
 
 }
 
-void FilterComponent::resized()
-{
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
+FilterComponent::~FilterComponent() {
+
+}
+
+void FilterComponent::paint(juce::Graphics& g) {
+    g.fillAll(juce::Colours::pink);   // clear the background
+
+    g.setColour(juce::Colours::black);
+    g.drawRect(getLocalBounds(), 4);
+}
+
+void FilterComponent::resized() {
 
     const auto bounds = getLocalBounds().reduced(10);
     const auto padding = 10;
@@ -67,19 +56,10 @@ void FilterComponent::resized()
     const auto sliderStartX = 0;
     const auto sliderStartY = bounds.getHeight() / 2 - (sliderHeight / 2);
 
-    attSelect.setBounds(sliderStartX, sliderStartY, sliderWidth, sliderHeight);
-    decSelect.setBounds(attSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
-    susSelect.setBounds(decSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
-    relSelect.setBounds(susSelect.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
+    freq.setBounds(sliderStartX, sliderStartY, sliderWidth, sliderHeight);
+    res.setBounds(freq.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
+    type.setBounds(res.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
+    power.setBounds(type.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
 
-
-
-
-}
-
-void FilterComponent::setSlider(juce::Slider& slider) {
-    slider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
-    addAndMakeVisible(slider);
 
 }

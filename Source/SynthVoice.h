@@ -12,6 +12,7 @@
 #include <JuceHeader.h>
 #include "SynthSound.h"
 #include "OscData.h"
+#include "AmpData.h"
 #include "FilterData.h"
 
 class SynthVoice : public juce::SynthesiserVoice {
@@ -30,18 +31,26 @@ class SynthVoice : public juce::SynthesiserVoice {
 
      OscData& getOsc() { return osc; };
      OscData& getOsc2() { return osc2; };
-     FilterData& getFilter() { return adsr; };
+     AmpData& getAmp() { return adsr; };
+     FilterData& getFilter() { return filter; };
+
 
  private:
      juce::dsp::ProcessSpec spec;
      juce::AudioBuffer<float> synthBuffer;
+     juce::AudioBuffer<float> synthBuffer2;
 
      OscData osc;
      OscData osc2;
      juce::dsp::Gain<float> gain;
+     juce::dsp::Gain<float> gain2;
 
-     FilterData adsr;
+     AmpData adsr;
      juce::ADSR::Parameters adsrParameters;
+
+     FilterData filter;
+     
+     
 
      bool isPrepared = false;
 
